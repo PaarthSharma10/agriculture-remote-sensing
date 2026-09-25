@@ -8,7 +8,12 @@
  *      which generates a deterministic synthetic dataset.
  *   3. The `live` flag indicates whether real backend data was loaded.
  *
- * TIMEOUT: Each fetch has a 3-second timeout to avoid hanging on offline setups.
+ * TIMEOUT: Each fetch aborts after 6 seconds so a fully offline setup still
+ * reaches the demo fallback instead of hanging. It is longer than a purely
+ * local backend needs (those answer in tens of milliseconds) because the
+ * production API runs as a Vercel function: a cold start plus the /api proxy
+ * hop can exceed 3 seconds, which used to abort the request and silently
+ * drop the dashboard back to synthetic data.
  */
 import type { Prediction, Sample } from "./types";
 import { generatePredictions, generateSamples } from "./demo";
@@ -24,7 +29,7 @@ export interface DashboardData {
 async function fetchJson(url: string): Promise<unknown | undefined> {
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3000);
+    const timer = setTimeout(() => controller.abort(), 6000);
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
     if (!res.ok) return undefined;
