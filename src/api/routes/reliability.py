@@ -1,24 +1,28 @@
 from fastapi import APIRouter
-from pathlib import Path
 import pandas as pd
+
+from src.api.paths import data_path
 
 router = APIRouter()
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
-RELIABILITY_DIR = (
-    PROJECT_ROOT
-    / "data"
-    / "analysis"
-    / "ml"
-    / "final_evaluation"
-    / "reliability_analysis"
-)
+def reliability_file(name: str):
+    """Path to a file inside data/analysis/ml/final_evaluation/
+    reliability_analysis/, falling back to the bundled copy on hosts where
+    the full data/ tree is not deployed."""
+    return data_path(
+        "analysis",
+        "ml",
+        "final_evaluation",
+        "reliability_analysis",
+        name,
+    )
 
 
+@router.get("", include_in_schema=False)  # bare form: /api/reliability
 @router.get("/")
 def get_reliability():
-    file_path = RELIABILITY_DIR / "overall_reliability.csv"
+    file_path = reliability_file("overall_reliability.csv")
 
     if not file_path.exists():
         return {"reliability": []}
@@ -32,7 +36,7 @@ def get_reliability():
 
 @router.get("/scores")
 def get_reliability_scores():
-    file_path = RELIABILITY_DIR / "reliability_scores.csv"
+    file_path = reliability_file("reliability_scores.csv")
 
     if not file_path.exists():
         return {"scores": []}
@@ -46,7 +50,7 @@ def get_reliability_scores():
 
 @router.get("/risk")
 def get_risk_summary():
-    file_path = RELIABILITY_DIR / "risk_summary.csv"
+    file_path = reliability_file("risk_summary.csv")
 
     if not file_path.exists():
         return {"risk": []}

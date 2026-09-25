@@ -1,0 +1,7 @@
+# Python dependencies for the Agricultural Intelligence API.
+# Installed by Vercel's Python builder (and by pip locally).
+#
+# Kept deliberately loose so the builder can resolve a build compatible with
+# the runtime's Python version; the app only uses stable FastAPI/pandas APIs.
+fastapi>=0.115,<1.0
+pandas>=2.2,<4.0

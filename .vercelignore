@@ -1,0 +1,19 @@
+# Only the API source and its bundled CSVs are uploaded for this deployment.
+# The full data/ tree is ~118 MB and is not needed: data_path() falls back to
+# the small copies in api/bundled/.
+data/
+web/
+notebooks/
+outputs/
+.venv/
+venv/
+.freebuff/
+.git/
+.vscode/
+project_tree.txt
+**/__pycache__/
+*.pyc
+.env
+.env.local
+*.log
+*.md

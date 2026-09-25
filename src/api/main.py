@@ -19,9 +19,24 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# The dashboard normally reaches the API through its own origin (Vite proxies
+# /api in dev, and Vercel rewrites /api/* to this service in production), so
+# CORS only matters when the API is called cross-origin directly — local dev
+# servers on other ports, or the deployed API opened on its own.
+ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://agri-rs-dashboard.vercel.app",
+    "https://agri-rs-dashboard-gcsh448wf-paarth2727-2373.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=ALLOWED_ORIGINS,
+    # Covers Vercel preview URLs for future branches of the dashboard.
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

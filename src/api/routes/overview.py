@@ -1,24 +1,24 @@
 from fastapi import APIRouter
-from pathlib import Path
 import pandas as pd
+
+from src.api.paths import data_path
 
 router = APIRouter()
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
+# See dataset.py for why the dashboard reads ml_features.csv rather than the
+# model's training matrix.
+ML_DATASET = data_path("features", "ml_features.csv")
 
-ML_DATASET = PROJECT_ROOT / "data" / "ml" / "ml_dataset.csv"
-
-MODEL_METRICS = (
-    PROJECT_ROOT
-    / "data"
-    / "analysis"
-    / "ml"
-    / "final_evaluation"
-    / "final_model_evaluation"
-    / "corrected_overall_metrics.csv"
+MODEL_METRICS = data_path(
+    "analysis",
+    "ml",
+    "final_evaluation",
+    "final_model_evaluation",
+    "corrected_overall_metrics.csv",
 )
 
 
+@router.get("", include_in_schema=False)  # bare form: /api/overview
 @router.get("/")
 def get_overview():
     result = {

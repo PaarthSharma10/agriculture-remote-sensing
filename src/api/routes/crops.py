@@ -1,14 +1,15 @@
 from fastapi import APIRouter
-from pathlib import Path
 import pandas as pd
+
+from src.api.paths import data_path
 
 router = APIRouter()
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
+# Dashboard dataset (see dataset.py for why this is ml_features.csv).
+ML_DATASET = data_path("features", "ml_features.csv")
 
-ML_DATASET = PROJECT_ROOT / "data" / "ml" / "ml_dataset.csv"
 
-
+@router.get("", include_in_schema=False)  # bare form: /api/crops
 @router.get("/")
 def get_crops():
     if not ML_DATASET.exists():

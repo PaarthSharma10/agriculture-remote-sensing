@@ -1,19 +1,20 @@
 from fastapi import APIRouter, HTTPException
-from pathlib import Path
 import pandas as pd
+
+from src.api.paths import data_path
 
 router = APIRouter()
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-
-PREDICTIONS_FILE = (
-    PROJECT_ROOT
-    / "data"
-    / "analysis"
-    / "ml"
-    / "final_evaluation"
-    / "reliability_analysis"
-    / "reliability_predictions.csv"
+# Cross-validated predictions with 95% intervals and reliability scores.
+# Its row count matches data/features/ml_features.csv exactly (162 rows over
+# the same district/season/crop keys), which the frontend asserts so that
+# samples and predictions stay in step.
+PREDICTIONS_FILE = data_path(
+    "analysis",
+    "ml",
+    "final_evaluation",
+    "reliability_analysis",
+    "reliability_predictions.csv",
 )
 
 
@@ -27,6 +28,7 @@ def load_predictions():
     return pd.read_csv(PREDICTIONS_FILE)
 
 
+@router.get("", include_in_schema=False)  # bare form: /api/predictions
 @router.get("/")
 def get_predictions(
     district: str | None = None,

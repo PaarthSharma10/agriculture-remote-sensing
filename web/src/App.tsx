@@ -252,7 +252,7 @@ function AppInner() {
               ))}
             </div>
           </div>
-          <div className="sidebar-footer">© 2025 Agri RS</div>
+          <div className="sidebar-footer">© 2026 Agri RS</div>
         </aside>
 
         {/* Main */}
