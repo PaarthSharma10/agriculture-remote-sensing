@@ -69,3 +69,35 @@ Open http://localhost:5173.
 ```bash
 cd web && npm run build   # outputs dist/
 ```
+
+## Deployment (Vercel)
+
+Two Vercel projects deploy from this one repository, each with its own root
+directory:
+
+| Project | Root directory | Serves |
+| --- | --- | --- |
+| `agri-rs-dashboard` | `web` | the React dashboard — https://agri-rs-dashboard.vercel.app |
+| `agri-rs-api` | `.` (repo root) | the FastAPI backend — https://agri-rs-api.vercel.app |
+
+The root directory matters: the repository root holds the API's `vercel.json`
+(with its `@vercel/python` build), while `web/vercel.json` holds the Vite
+build. If both projects pointed at the root, a push would rebuild the
+dashboard as the API and every page would return JSON — so keep the two root
+directories as listed above.
+
+`web/vercel.json` rewrites `/api/*` to the API deployment, so the browser only
+ever talks to one origin and CORS never comes into play. The API reads
+`data/features/ml_features.csv` and `reliability_predictions.csv` when the full
+`data/` tree is checked out, and falls back to the 135 KB copies in
+`api/bundled/` otherwise — `data/` (~118 MB) is gitignored and is excluded from
+the deployment by `.vercelignore`.
+
+Pushing to `main` deploys both projects. To deploy the dashboard by hand, run
+from the repository root (the root directory is resolved against the working
+directory, so do not run it from inside `web/`):
+
+```bash
+vercel deploy --project agri-rs-dashboard --prod
+vercel deploy --project agri-rs-api --prod
+```
