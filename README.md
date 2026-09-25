@@ -93,6 +93,22 @@ ever talks to one origin and CORS never comes into play. The API reads
 `api/bundled/` otherwise — `data/` (~118 MB) is gitignored and is excluded from
 the deployment by `.vercelignore`.
 
+### Data mode
+
+The dashboard is built with `VITE_DATA_MODE=demo` (see `web/.env.production`):
+it ships the synthetic dataset from `web/src/demo.ts` — 2021–2025, 17 crops,
+~15,000 rows — and makes **no `/api` calls at all**. The header shows the
+**DEMO DATA** badge.
+
+This is deliberate. The real observations behind the API stop at **2022** and
+cover only **5 crops** (Bajra, Barley, Potato, Rice, Wheat) × 22 districts =
+162 rows, so live mode shows a much sparser dashboard (see the `data_integrity`
+audit in `data/analysis/`). To switch production back to the API once the
+dataset covers 2023–2025 and more crops, set `VITE_DATA_MODE=live` in
+`web/.env.production` (or delete the file) and redeploy — the live fetch path
+tree-shakes out of the demo build, so no code changes are needed. `dev` always
+runs in live mode via `web/.env.local`.
+
 Pushing to `main` deploys both projects. To deploy the dashboard by hand, run
 from the repository root (the root directory is resolved against the working
 directory, so do not run it from inside `web/`):

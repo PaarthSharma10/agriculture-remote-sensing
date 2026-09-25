@@ -2,8 +2,13 @@
  * api.ts — Data loading layer for the Agri RS dashboard.
  *
  * STRATEGY:
- *   1. Try fetching /api/dataset and /api/predictions from the FastAPI backend
- *      (Vite proxies /api to 127.0.0.1:8000).
+ *   0. If VITE_DATA_MODE === "demo", skip the network entirely and serve the
+ *      synthetic dataset (see .env.production). Used when production should
+ *      show the full 2021–2025 / 17-crop grid that the real observations
+ *      (2021–2022, 5 crops) cannot fill yet.
+ *   1. Otherwise, try fetching /api/dataset and /api/predictions from the
+ *      FastAPI backend (Vite proxies /api to 127.0.0.1:8000; Vercel rewrites
+ *      /api to agri-rs-api.vercel.app).
  *   2. If either request fails or returns invalid data, fall back to demo.ts
  *      which generates a deterministic synthetic dataset.
  *   3. The `live` flag indicates whether real backend data was loaded.
@@ -17,6 +22,14 @@
  */
 import type { Prediction, Sample } from "./types";
 import { generatePredictions, generateSamples } from "./demo";
+
+// "demo" short-circuits the network; anything else (including unset) is live.
+const DATA_MODE = (import.meta.env.VITE_DATA_MODE ?? "live") as string;
+
+function demoData(): DashboardData {
+  const samples = generateSamples();
+  return { samples, predictions: generatePredictions(samples), live: false };
+}
 
 export interface DashboardData {
   samples: Sample[];
@@ -89,6 +102,10 @@ function parsePredictions(raw: unknown): Prediction[] | undefined {
 }
 
 export async function loadDashboard(): Promise<DashboardData> {
+  // Forced demo mode: no /api calls at all, so the dashboard renders the full
+  // synthetic grid even when the backend is reachable.
+  if (DATA_MODE === "demo") return demoData();
+
   // Try the backend first (Vite proxies /api to 127.0.0.1:8000).
   const [samplesRaw, predsRaw] = await Promise.all([
     fetchJson("/api/dataset"),
@@ -103,6 +120,5 @@ export async function loadDashboard(): Promise<DashboardData> {
   }
 
   // Fallback: deterministic demo dataset so the UI always renders.
-  const demo = generateSamples();
-  return { samples: demo, predictions: generatePredictions(demo), live: false };
+  return demoData();
 }
