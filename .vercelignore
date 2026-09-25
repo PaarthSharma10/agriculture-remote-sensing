@@ -1,8 +1,14 @@
-# Only the API source and its bundled CSVs are uploaded for this deployment.
-# The full data/ tree is ~118 MB and is not needed: data_path() falls back to
-# the small copies in api/bundled/.
+# Vercel ignore rules, resolved from the REPOSITORY ROOT for BOTH projects
+# (agri-rs-api builds from the root, agri-rs-dashboard builds from web/).
+#
+# It must therefore never exclude web/ itself — doing so deleted the
+# dashboard's package.json and failed its build. Only heavy, non-shipped
+# artifacts are listed here.
+#
+# data/ (~118 MB) is gitignored, so this entry only matters for CLI deploys
+# from a full checkout; the API then reads the 135 KB copies in
+# api/bundled/ via data_path().
 data/
-web/
 notebooks/
 outputs/
 .venv/
@@ -17,3 +23,9 @@ project_tree.txt
 .env.local
 *.log
 *.md
+
+# Frontend artifacts that must never reach a Python-function upload.
+# (node_modules/ and dist/ are gitignored too; listed for CLI deploys.)
+web/node_modules/
+web/dist/
+web/.vite/
