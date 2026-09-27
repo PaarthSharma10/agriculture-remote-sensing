@@ -297,7 +297,7 @@ function AppInner() {
                 {tab === "data" && <DataExplorerView samples={data.samples} />}
                 {tab === "reports" && <ReportsView samples={data.samples} predictions={data.predictions} />}
                 {tab === "suitability" && <SuitabilityView lang={lang} />}
-                {tab === "chatbot" && <ChatbotView lang={lang} />}
+                {tab === "chatbot" && <ChatbotView lang={lang} setLang={changeLang} samples={data.samples} predictions={data.predictions} />}
                 {tab === "compare" && <CompareView samples={data.samples} />}
                 {tab === "glossary" && <GlossaryView lang={lang} />}
                 {tab === "about" && <AboutView samples={data.samples.length} />}

@@ -67,8 +67,13 @@ const translations: Record<string, Record<Lang, string>> = {
 
   // Chatbot
   "chat.title": { en: "AI Agricultural Assistant", hi: "AI कृषि सहायक", pa: "AI ਖੇਤੀ ਸਹਾਇਕ" },
-  "chat.placeholder": { en: "Ask about crops, yields, soil…", hi: "फसलों, उपज, मिट्टी के बारे में पूछें…", pa: "ਫ਼ਸਲਾਂ, ਝਾੜ, ਮਿੱਟੀ ਬਾਰੇ ਪੁੱਛੋ…" },
+  "chat.placeholder": { en: "Ask about crops, districts, yields, model…", hi: "फसलों, जिलों, उपज, मॉडल के बारे में पूछें…", pa: "ਫ਼ਸਲਾਂ, ਜ਼ਿਲ੍ਹਿਆਂ, ਝਾੜ, ਮਾਡਲ ਬਾਰੇ ਪੁੱਛੋ…" },
   "chat.send": { en: "Send", hi: "भेजें", pa: "ਭੇਜੋ" },
+  "chat.about": { en: "Every answer is computed live from the loaded dataset — the numbers match the other tabs. Answers available in English, हिन्दी and ਪੰਜਾਬੀ; questions are understood in all three.", hi: "हर उत्तर लोड किए गए डेटासेट से लाइव गणना होता है — आंकड़े बाकी टैबों से मेल खाते हैं। उत्तर English, हिन्दी और ਪੰਜਾਬੀ में; सवाल तीनों भाषाओं में समझे जाते हैं।", pa: "ਹਰ ਜਵਾਬ ਲੋਡ ਕੀਤੇ ਡੇਟਾਸੈੱਟ ਤੋਂ ਲਾਈਵ ਗਿਣਿਆ ਜਾਂਦਾ ਹੈ — ਅੰਕੜੇ ਬਾਕੀ ਟੈਬਾਂ ਨਾਲ ਮਿਲਦੇ ਹਨ। ਜਵਾਬ English, ਹਿੰਦੀ ਤੇ ਪੰਜਾਬੀ ਵਿੱਚ; ਸਵਾਲ ਤਿੰਨਾਂ ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਸਮਝੇ ਜਾਂਦੇ ਹਨ।" },
+  "chat.builtin": { en: "Built-in", hi: "बिल्ट-इन", pa: "ਬਿਲਟ-ਇਨ" },
+  "chat.keyFree": { en: "Paste free API key…", hi: "मुफ़्त API कुंजी डालें…", pa: "ਮੁਫ਼ਤ API ਕੁੰਜੀ ਪਾਓ…" },
+  "chat.keyAny": { en: "API key…", hi: "API कुंजी…", pa: "API ਕੁੰਜੀ…" },
+  "chat.thinking": { en: "Thinking…", hi: "सोच रहा हूँ…", pa: "ਸੋਚ ਰਿਹਾ ਹਾਂ…" },
 
   // Common
   "common.export": { en: "📤 Export", hi: "📤 निर्यात", pa: "📤 ਨਿਕਾਸ" },
