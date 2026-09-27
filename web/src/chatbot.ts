@@ -18,6 +18,7 @@
 
 import { mean, formatNumber } from "./stats";
 import { t, type Lang } from "./i18n";
+import { findKnowledge } from "./chatKnowledge";
 import type { Prediction, Sample } from "./types";
 
 export interface ChatContext {
@@ -29,6 +30,7 @@ export type Topic =
   | "greeting" | "gratitude" | "model" | "topCrops" | "topDistricts"
   | "crop" | "district" | "bestForDistrict" | "cropInDistrict"
   | "compare" | "soil" | "weather" | "satellite" | "risk" | "dataset"
+  | "project" | "glossary"
   | "missingCrop" | "missingDistrict" | "fallback";
 
 export interface ChatReply {
@@ -944,6 +946,20 @@ export function answer(input: string, ctx: ChatContext, s: DatasetStats, lang: L
   if (districts.found.length === 1 && RX.best.test(input)) return bestForDistrictAnswer(districts.found[0], s, lang);
   if (districts.found.length === 1) return districtAnswer(districts.found[0], s, lang);
   if (crops.found.length === 1) return cropAnswer(crops.found[0], s, lang);
+
+  // Project & glossary knowledge — "what is NDVI?", "how was the model trained?",
+  // "which data sources?" etc. Checked before the generic topic regexes so
+  // definitional questions win, but after entity questions ("wheat in Ludhiana")
+  // which keep their data-grounded answers.
+  const kb = findKnowledge(input);
+  if (kb.length > 0) {
+    const entry = kb[0];
+    return {
+      topic: entry.role === "glossary" ? "glossary" : "project",
+      markdown: entry.answer[lang],
+      followUps: entry.followUps?.[lang] ?? [],
+    };
+  }
 
   if (RX.best.test(input) && RX.districtWord.test(input)) return topDistrictsAnswer(s, lang);
   if (RX.best.test(input) && RX.cropWord.test(input)) return topCropsAnswer(s, lang);
